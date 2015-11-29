@@ -1,0 +1,80 @@
+[user]
+	name = C. Augusto Proiete
+
+	; Ask me which e-mail to use, per repository (see for-fun and for-work aliases below) 
+	email = (none)
+
+[core]
+	editor = \"C:/Program Files (x86)/Notepad++/notepad++.exe\" -multiInst -nosession -noPlugin
+	autocrlf = true
+
+	; Don't show the popup window to ask the password
+	askpass = 
+
+[merge]
+	tool = extMerge
+
+[mergetool "extMerge"]
+	cmd = \"C:/Program Files/Perforce/p4merge.exe\" \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+
+[mergetool]
+	trustExitCode = false
+	keepBackup = false
+	keepTemporaries = false
+
+[diff]
+	tool = extDiff
+	external = \"C:/Tools/Git/extDiff.sh\"
+
+[difftool "extDiff"]
+	cmd = \"C:/Program Files/Perforce/p4merge.exe\" \"$LOCAL\" \"$REMOTE\"
+
+[difftool]
+	prompt = false
+
+[pull]
+	rebase = true
+
+[push]
+	default = simple
+
+[branch]
+	autosetuprebase = always
+
+[rerere]
+	enabled = true
+
+[http]
+	sslVerify = false
+
+[alias]
+	; List all the aliases available
+	list-alias = "!git config -l | grep alias | cut -c 7-"
+
+	; Open this file for editing using the editor configured above
+	edit-config = config --global -e
+
+	; Set the e-mail to be used when commiting (per repository)
+	for-work = config user.email "augusto.proiete@REPLACE-WITH-WORK-EMAIL.com"
+	for-fun = config user.email "augusto.proiete@REPLACE-WITH-PERSONAL-EMAIL.com"
+
+	; Delete everything in the .gitignore except the NuGet packages folders
+	cleanup = clean -fxd -e packages/
+
+	; Delete all branches that have been merged to master
+	clean-branches = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
+
+	; Show log in form of a tree
+	logtree = log --graph --oneline --decorate --all
+
+	; Amend changes to the last commit
+	amend = commit -a --amend
+
+	; Commits all current changes (inc. deletions) to a SAVEPOINT commit
+	save = !git add -A && git commit -m 'SAVEPOINT'
+
+	; Commits all current changes (not inc. deletions) to a WIP commit
+	wip = commit -am "WIP"
+
+[git-tf]
+	include-metadata = false
