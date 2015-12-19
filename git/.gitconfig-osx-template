@@ -1,0 +1,73 @@
+[core]
+	editor = subl -n -w
+	autocrlf = input
+
+	; Don't show the popup window to ask the password
+	askpass = 
+
+[user]
+	name = C. Augusto Proiete
+
+	; Ask me which e-mail to use, per repository (see for-fun and for-work aliases below)
+	email = (none)
+
+[credential]
+	helper = osxkeychain
+
+[merge]
+	tool = p4merge
+	keepBackup = false
+
+[mergetool "p4merge"]
+	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+	keepTemporaries = false
+	trustExitCode = false
+	keepBackup = false
+
+[diff]
+	external = p4diff
+	prompt = false
+
+[rerere]
+	enabled = true
+
+[http]
+	sslVerify = false
+
+[pull]
+	rebase = true
+
+[push]
+	default = simple
+
+[branch]
+	autosetuprebase = always
+
+[alias]
+	; List all the aliases available
+	list-alias = "!git config -l | grep alias | cut -c 7-"
+
+	; Open this file for editing using the editor configured above
+	edit-config = config --global -e
+
+	; Set the e-mail to be used when commiting (per repository)
+	for-work = config user.email "augusto.proiete@REPLACE-WITH-WORK-EMAIL.com"
+	for-fun = config user.email "augusto.proiete@REPLACE-WITH-PERSONAL-EMAIL.com"
+
+	; Delete everything in the .gitignore except the NuGet packages folders
+	cleanup = clean -fxd -e packages/
+
+	; Delete all branches that have been merged to master
+	clean-branches = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
+
+	; Show log in form of a tree
+	logtree = log --graph --oneline --decorate --all
+
+	; Amend changes to the last commit
+	amend = commit -a --amend
+
+	; Commits all current changes (inc. deletions) to a SAVEPOINT commit
+	save = !git add -A && git commit -m 'SAVEPOINT'
+
+	; Commits all current changes (not inc. deletions) to a WIP commit
+	wip = commit -am "WIP"
